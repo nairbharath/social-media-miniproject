@@ -1,21 +1,39 @@
-import { Input, Button, Flex, Text } from '@chakra-ui/react';
-import React, { useState } from 'react';
-import { useSetRecoilState } from 'recoil';
-import { authModalState } from '../../../../atoms/authModalAtom';
+import { Input, Button, Flex, Text } from "@chakra-ui/react";
+import React, { useState } from "react";
+import { useSetRecoilState } from "recoil";
+import { authModalState } from "../../../../atoms/authModalAtom";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "../../../../firebase/clientApp";
 
-
-
-const SignUp:React.FC= () => {
-    
-    const setAuthModalState = useSetRecoilState(authModalState);
+const SignUp: React.FC = () => {
+  const setAuthModalState = useSetRecoilState(authModalState);
   const [signUpForm, setSignUpForm] = useState({
     email: "",
     password: "",
     confirmPassword: "",
   });
 
+  const [error, setError] = useState("");
+  const [createUserWithEmailAndPassword, user, loading, userError] =
+    useCreateUserWithEmailAndPassword(auth);
+
   //firebase logic
-  const onSubmit = () => {};
+  const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (error) setError("");
+    if (signUpForm.password != signUpForm.confirmPassword) {
+      //setError
+      setError("Passwords do not match");
+      return;
+    }
+    if (signUpForm.password.length <= 6) {
+      setError("Enter password more than 6 characters");
+      return;
+    }
+
+    //passwords match
+    createUserWithEmailAndPassword(signUpForm.email, signUpForm.password);
+  };
 
   const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     //update form state
@@ -94,7 +112,17 @@ const SignUp:React.FC= () => {
         bg="gray.50"
       />
       {/* 2 inputs- username and password */}
-      <Button width="100%" height="36px" mt={2} mb={2} type="submit">
+      {error && (
+        <Text textAlign="center" color={"red"} fontSize="10pt">
+          {error}
+        </Text>
+      )}
+      <Button 
+      width="100%" 
+      height="36px" 
+      mt={2} mb={2} 
+      type="submit"
+      isLoading={loading}>
         Sign Up
       </Button>
       <Flex fontSize="9pt" justifyContent="center">
@@ -103,16 +131,17 @@ const SignUp:React.FC= () => {
           color="blue.500"
           fontWeight={700}
           cursor="pointer"
-          onClick={() => 
-          setAuthModalState((prev) => ({
-            ...prev,
-            view: "signup",
-          }))}
+          onClick={() =>
+            setAuthModalState((prev) => ({
+              ...prev,
+              view: "login",
+            }))
+          }
         >
           LOG IN!!
         </Text>
       </Flex>
     </form>
   );
-}
+};
 export default SignUp;
