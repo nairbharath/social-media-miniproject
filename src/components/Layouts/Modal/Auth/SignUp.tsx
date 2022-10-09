@@ -28,8 +28,8 @@ const SignUp: React.FC = () => {
       setError("Passwords do not match");
       return;
     }
-    if (signUpForm.password.length <= 6) {
-      setError("Enter password more than 6 characters");
+    if (signUpForm.password.length <= 5) {
+      setError("Enter password more than 5 characters");
       return;
     }
 
