@@ -20,11 +20,20 @@ import {
 import React, { useState } from "react";
 import { BsFillPersonFill, BsFillEyeFill } from "react-icons/bs";
 
-import { doc, runTransaction, serverTimestamp } from "firebase/firestore";
+import {
+  doc,
+  getDoc,
+  runTransaction,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
 import { useRouter } from "next/router";
 
 import { HiLockClosed } from "react-icons/hi";
 import { useSetRecoilState } from "recoil";
+import { auth, firestore } from "../../../../firebase/clientApp";
+import { async } from "@firebase/util";
+import { useAuthState } from "react-firebase-hooks/auth";
 // import { communityState } from "../../../atoms/communitiesAtom";
 // import { firestore } from "../../../firebase/clientApp";
 // import ModalWrapper from "../ModalWrapper";
@@ -38,9 +47,10 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   open,
   handleClose,
 }) => {
+  const [user] = useAuthState(auth);
   const [communityName, setCommunityName] = useState("");
   const [charsRemaining, setCharsRemaining] = useState(21);
-  const [nameError, setNameError] = useState("");
+  const [error, setError] = useState("");
   const [communityType, setCommunityType] = useState("public");
   const [loading, setLoading] = useState(false);
   //   const router = useRouter();
@@ -52,16 +62,48 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
     setCharsRemaining(21 - event.target.value.length);
   };
 
-  //   const handleCreateCommunity = () => {
-  //     if (nameError) setNameError("");
-  //     const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+  const handleCreateCommunity = async () => {
+    //validating community
 
-  //     if (format.test(name) || nameError.length < 3) {
-  //       setNameError(
-  //         "Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores."
-  //       );
-  //     }
-  //   };
+      if (error) setError("");
+    const format = /[ `!@#$%^&*()+\-=\[\]{};':"\\|,.<>\/?~]/;
+
+    if (format.test(communityName) || communityName.length < 3) {
+      setError(
+        "Community names must be between 3–21 characters, and can only contain letters, numbers, or underscores."
+      );
+      return;
+    }
+    setLoading(true);
+
+    try {
+      //create the community document in firestore
+      //caheck that name is not taken
+      //if valid name, create community
+
+      const communityDocRef = doc(firestore, "communities", communityName);
+      const communityDoc = await getDoc(communityDocRef);
+
+      //check if community exists
+      if (communityDoc.exists()) {
+        throw new Error(`Sorry, q/${communityName} is taken. Try another.`);
+        return;
+      }
+
+      //create community
+      await setDoc(communityDocRef, {
+        creatorId: user?.uid,
+        createdAt: serverTimestamp(),
+        numberOfMembers: 1,
+        privacyType: "public",
+      });
+    } catch (error: any) {
+      console.log("handleCreateCommunity error", error);
+      setError(error.message);
+    }
+
+    setLoading(false);
+  };
 
   const onCommunityTypeChange = (
     event: React.ChangeEvent<HTMLInputElement>
@@ -117,6 +159,9 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
                 pt={2}
               >
                 {charsRemaining} Characters remaining
+              </Text>
+              <Text fontSize="9pt" color="red" pt={1}>
+                {error}
               </Text>
               <Box mt={4} mb={4}>
                 <Text fontWeight={600} fontSize={15}>
@@ -179,13 +224,22 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
           </Box>
 
           <ModalFooter bg="gray.100" borderRadius="0px 0px 10px 10px">
-            <Button variant="outline" height="30px" mr={3} onClick={handleClose}>
+            <Button
+              variant="outline"
+              height="30px"
+              mr={3}
+              onClick={handleClose}
+            >
               Cancel
             </Button>
-            <Button variant="solid"
-          height="30px"
-        //   onClick={handleCreateCommunity}
-          isLoading={loading}>Create Community</Button>
+            <Button
+              variant="solid"
+              height="30px"
+                onClick={handleCreateCommunity}
+              isLoading={loading}
+            >
+              Create Community
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
