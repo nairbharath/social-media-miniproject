@@ -19,9 +19,9 @@ import { VscAccount } from "react-icons/vsc";
 import { IoSparkles } from "react-icons/io5";
 import { CgProfile } from "react-icons/cg";
 import { MdOutlineLogin } from "react-icons/md";
-import { auth } from "../../../firebase/clientApp";
+import { auth } from "../../firebase/clientApp";
 import { useSetRecoilState } from "recoil";
-import { authModalState } from "../../../atoms/authModalAtom";
+import { authModalState } from "../../atoms/authModalAtom";
 
 type UserMenuProps = {
   user?: User | null;

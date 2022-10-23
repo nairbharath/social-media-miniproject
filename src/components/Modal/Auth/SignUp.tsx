@@ -1,11 +1,11 @@
 import { Input, Button, Flex, Text } from "@chakra-ui/react";
 import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
-import { authModalState } from "../../../../atoms/authModalAtom";
+import { authModalState } from "../../../atoms/authModalAtom";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth, firestore } from "../../../../firebase/clientApp";
-import { FIREBASE_ERRORS } from "../../../../firebase/errors";
-import { addDoc, collection } from "firebase/firestore";
+import { auth, firestore } from "../../../firebase/clientApp";
+import { FIREBASE_ERRORS } from "../../../firebase/errors";
+import { addDoc, collection, doc, setDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 
 
@@ -49,7 +49,7 @@ const SignUp: React.FC = () => {
 
   //creating user in firestore without functions
   const createUserDocument = async (user: User) => {
-    await addDoc(collection(firestore, 'users'), JSON.parse(JSON.stringify(user)));
+    await setDoc(doc(firestore, 'users',user.uid), JSON.parse(JSON.stringify(user)));
   }
 
   useEffect(() => {

@@ -4,8 +4,8 @@ import { useSendPasswordResetEmail } from "react-firebase-hooks/auth";
 import { BsDot, BsReddit} from "react-icons/bs";
 import { SiTypescript} from "react-icons/si";
 import { MdMarkEmailUnread} from "react-icons/md";
-import { authModalState, ModalView } from "../../../../atoms/authModalAtom";
-import { auth } from "../../../../firebase/clientApp";
+import { authModalState, ModalView } from "../../../atoms/authModalAtom";
+import { auth } from "../../../firebase/clientApp";
 import { useSetRecoilState } from "recoil";
 
 // type ResetPasswordProps = {
