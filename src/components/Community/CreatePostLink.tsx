@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { BsLink45Deg } from "react-icons/bs";
-import { FaReddit } from "react-icons/fa";
+import { FaReddit, FaUserAstronaut } from "react-icons/fa";
 import { IoImageOutline } from "react-icons/io5";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../atoms/authModalAtom";
@@ -35,7 +35,7 @@ const CreatePostLink: React.FC = () => {
       p={2}
       mb={4}
     >
-      <Icon as={FaReddit} fontSize={36} color="gray.300" mr={4} />
+      <Icon as={FaUserAstronaut} fontSize={36} color="gray.300" mr={4} />
       <Input
         placeholder="Create Post"
         fontSize="10pt"

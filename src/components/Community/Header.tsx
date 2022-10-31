@@ -1,6 +1,6 @@
 import { Box, Button, Flex, Icon, Image, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
-import { FaReddit, FaUserCircle } from "react-icons/fa";
+import { FaReddit, FaUserAstronaut, FaUserCircle, FaUserCog, FaUserFriends, FaUserInjured, FaUserNinja } from "react-icons/fa";
 import { Community } from "../../atoms/communitiesAtom";
 import useCommunityData from "../../hooks/useCommunityData";
 
@@ -33,7 +33,7 @@ const Header: React.FC<HeaderProps> = ({ communityData }) => {
             />
           ) : (
             <Icon
-              as={FaUserCircle}
+              as={FaUserAstronaut}
               fontSize={64}
               position="relative"
               top={-3}
