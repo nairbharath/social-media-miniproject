@@ -16,7 +16,7 @@ import {
   import { useAuthState } from "react-firebase-hooks/auth";
   import { HiOutlineDotsHorizontal } from "react-icons/hi";
   import { RiAdminFill, RiCakeLine } from "react-icons/ri";
-  import { FaReddit, FaUserAstronaut, FaUserCircle } from "react-icons/fa";
+  import {  FaUserAstronaut, FaUserCircle } from "react-icons/fa";
   import { Community, communityState } from "../../atoms/communitiesAtom";
   import { auth, firestore, storage } from "../../firebase/clientApp";
   import useSelectFile from "../../hooks/useSelectFile";
