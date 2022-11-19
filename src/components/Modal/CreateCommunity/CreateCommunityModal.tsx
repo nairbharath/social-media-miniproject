@@ -35,6 +35,7 @@ import { useSetRecoilState } from "recoil";
 import { auth, firestore } from "../../../firebase/clientApp";
 import { async } from "@firebase/util";
 import { useAuthState } from "react-firebase-hooks/auth";
+import useDirectory from "../../../hooks/useDirectory";
 // import { communityState } from "../../../atoms/communitiesAtom";
 // import { firestore } from "../../../firebase/clientApp";
 // import ModalWrapper from "../ModalWrapper";
@@ -54,7 +55,8 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
   const [error, setError] = useState("");
   const [communityType, setCommunityType] = useState("public");
   const [loading, setLoading] = useState(false);
-  //   const router = useRouter();
+  const router = useRouter();
+  const { toggleMenuOpen } = useDirectory();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.value.length > 21) return;
@@ -62,6 +64,13 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
     // recalculating how many chars left in the name
     setCharsRemaining(21 - event.target.value.length);
   };
+
+  // const onCommunityTypeChange = (
+  //   event: React.ChangeEvent<HTMLInputElement>
+  // ) => {
+  //   setCommunityType(event.target.name);
+  // };
+
 
   const handleCreateCommunity = async () => {
     //validating community
@@ -111,6 +120,9 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
           }
         );
       });
+      handleClose();
+      toggleMenuOpen();
+      router.push(`q/${communityName}`);
     } catch (error: any) {
       console.log("handleCreateCommunity error", error);
       setError(error.message);

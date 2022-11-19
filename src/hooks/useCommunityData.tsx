@@ -60,6 +60,7 @@ import { useRouter } from "next/router";
         setCommunityStateValue((prev) => ({
           ...prev,
           mySnippets: snippets as CommunitySnippet[],
+          snippetsFetched: true,
         }));
       } catch (error: any) {
         console.log("getMySnippets error", error);
@@ -76,6 +77,7 @@ import { useRouter } from "next/router";
         const newSnippet: CommunitySnippet = {
           communityId: communityData.id,
           imageURL: communityData.imageURL || "",
+          isModerator: user?.uid === communityData.creatorId,
         };
         batch.set(
           doc(
@@ -157,6 +159,7 @@ import { useRouter } from "next/router";
         setCommunityStateValue((prev) => ({
           ...prev,
           mySnippets: [],
+          snippetsFetched: false,
         }));
         return;
       }
