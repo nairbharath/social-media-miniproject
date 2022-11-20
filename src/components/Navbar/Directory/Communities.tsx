@@ -10,31 +10,29 @@ import { FaUserAstronaut } from "react-icons/fa";
 type CommunitiesProps = {};
 
 const Communities: React.FC<CommunitiesProps> = () => {
-    const [open, setOpen] = useState(false);
-//   const handleClose = () => setOpen(false);
-    const mySnippets = useRecoilValue(communityState).mySnippets;
+  const [open, setOpen] = useState(false);
+  const mySnippets = useRecoilValue(communityState).mySnippets;
+
   return (
     <>
       <CreateCommunityModal open={open} handleClose={() => setOpen(false)} />
-      {mySnippets.find((item) => item.isModerator) && (
-        <Box mt={3} mb={4}>
-          <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
-            MODERATING
-          </Text>
-          {mySnippets
-            .filter((item) => item.isModerator)
-            .map((snippet) => (
-              <MenuListItem
-                key={snippet.communityId}
-                displayText={`q/${snippet.communityId}`}
-                link={`/q/${snippet.communityId}`}
-                icon={FaUserAstronaut}
-                iconColor="brand.100"
-              />
-            ))}
-        </Box>
-      )}
-
+      <Box mt={3} mb={4}>
+        <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
+          MODERATING
+        </Text>
+        {mySnippets
+          .filter((snippet) => snippet.isModerator)
+          .map((snippet) => (
+            <MenuListItem
+              key={snippet.communityId}
+              icon={FaUserAstronaut}
+              displayText={`q/${snippet.communityId}`}
+              link={`/q/${snippet.communityId}`}
+              iconColor="brand.100"
+              imageURL={snippet.imageURL}
+            />
+          ))}
+      </Box>
       <Box mt={3} mb={4}>
         <Text pl={3} mb={1} fontSize="7pt" fontWeight={500} color="gray.500">
           MY COMMUNITIES
@@ -45,24 +43,12 @@ const Communities: React.FC<CommunitiesProps> = () => {
           _hover={{ bg: "gray.100" }}
           onClick={() => setOpen(true)}
         >
-          <Flex alignItems="center">
+          <Flex align="center">
             <Icon fontSize={20} mr={2} as={GrAdd} />
             Create Community
           </Flex>
         </MenuItem>
-      <MenuItem>
-        <Flex
-          align="center"
-          width={"100%"}
-          fontSize="10pt"
-          _hover={{ bg: "gray.100" }}
-          onClick={() => setOpen(true)}
-        >
-          <Icon fontSize={20} mr={2} as={GrAdd} />
-          Create Community
-        </Flex>
-      </MenuItem>
-      {mySnippets.map((snippet) => (
+        {mySnippets.map((snippet) => (
           <MenuListItem
             key={snippet.communityId}
             icon={FaUserAstronaut}

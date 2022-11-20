@@ -13,15 +13,14 @@ const useDirectory = () => {
   const [directoryState, setDirectoryState] =
     useRecoilState(directoryMenuState);
   const router = useRouter();
-
-  const communityStateValue = useRecoilValue(communityState);
+  const [communityStateValue, setCommunityStateValue] =
+    useRecoilState(communityState);
 
   const onSelectMenuItem = (menuItem: DirectoryMenuItem) => {
     setDirectoryState((prev) => ({
       ...prev,
       selectedMenuItem: menuItem,
     }));
-
     router?.push(menuItem.link);
     if (directoryState.isOpen) {
       toggleMenuOpen();
@@ -35,32 +34,41 @@ const useDirectory = () => {
     }));
   };
 
-  // useEffect(() => {
-  //   const { community } = router.query;
+//   
+useEffect(() => {
+  const { currentCommunity } = communityStateValue;
 
-  //   const existingCommunity =
-  //     communityStateValue.visitedCommunities[community as string];
+  if (currentCommunity) {
+    setDirectoryState((prev) => ({
+      ...prev,
+      selectedMenuItem: {
+        displayText: `q/${currentCommunity.id}`,
+        link: `/q/${currentCommunity.id}`,
+        imageURL: currentCommunity.imageURL,
+        icon: FaUserAstronaut,
+        iconColor: "blue.500",
+      },
+    }));
+    return;
+  }
+  setDirectoryState((prev) => ({
+    ...prev,
+    selectedMenuItem: defaultMenuItem,
+  }));
+}, [communityStateValue.currentCommunity]);
 
-  //   if (existingCommunity) {
-  //     setDirectoryState((prev) => ({
-  //       ...prev,
-  //       selectedMenuItem: {
-  //         displayText: `r/${existingCommunity.id}`,
-  //         link: `r/${existingCommunity.id}`,
-  //         icon: FaUserAstronaut,
-  //         iconColor: "blue.500",
-  //         imageURL: existingCommunity.imageURL,
-  //       },
-  //     }));
-  //     return;
-  //   }
-  //   setDirectoryState((prev) => ({
-  //     ...prev,
-  //     selectedMenuItem: defaultMenuItem,
-  //   }));
-  // }, [router.query?.community, communityStateValue.visitedCommunities]);
+useEffect(() => {
+  const { communityId } = router.query;
 
-  return { directoryState, onSelectMenuItem, toggleMenuOpen };
+  if (!communityId) {
+    setCommunityStateValue((prev) => ({
+      ...prev,
+      currentCommunity: undefined,
+    }));
+  }
+}, [router.query]);
+
+return { directoryState, toggleMenuOpen, onSelectMenuItem };
 };
 
 export default useDirectory;

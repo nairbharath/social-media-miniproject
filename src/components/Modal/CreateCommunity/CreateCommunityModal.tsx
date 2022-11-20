@@ -170,13 +170,14 @@ const CreateCommunityModal: React.FC<CreateCommunityModalProps> = ({
                 Community names including capitalization cannot be changed
               </Text>
               <Text position={"relative"} top="28px" left="10px" width="20px">
-                q/
+                q/ 
               </Text>
               <Input
                 position="relative"
                 value={communityName}
                 size="sm"
                 pl="22px"
+                left='5px'
                 onChange={handleChange}
               />
               <Text
