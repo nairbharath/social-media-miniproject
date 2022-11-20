@@ -18,7 +18,7 @@ const PersonalHome: React.FC = () => {
         color="white"
         p="6px 10px"
         bg="blue.500"
-        height="34px"
+        height="94px"
         borderRadius="4px 4px 0px 0px"
         fontWeight={600}
         bgImage="url(/images/cet-personalhome.jpg)"
